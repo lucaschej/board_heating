@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+rm -rf constant/polyMesh/sets
+
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite
+runApplication splitMeshRegions -cellZones -overwrite
+runApplication decomposePar -allRegions	#to paralize
+runParallel $(getApplication)	#to paralize
+#chtMUltiRegionFoam # to run serial
+runApplication reconstructPar -allRegions #to paralize
+touch pfhs.foam
+
+chtMultiRegionFoam -postProcess -func cellMax -region a1
+python3 cellMax.py

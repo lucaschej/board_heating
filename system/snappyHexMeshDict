@@ -1,0 +1,182 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+//level parameter
+min  2;
+max  3;
+
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    heatedDuct
+    {
+        type triSurfaceMesh;
+        file "heatedDuct.stl";
+
+        regions
+        {
+            fluidInlet     { name fluidInlet;     }
+            fluidOutlet    { name fluidOutlet;    }
+            fluidExternal  { name fluidExternal;  }
+            //boardExternal  { name boardExternal; }
+        }
+    }
+
+    a1
+    {
+        type triSurfaceMesh;
+        file "a1.stl";
+    }
+/*    a2
+    {
+        type triSurfaceMesh;
+        file "a2.stl";
+    }
+    a3
+    {
+        type triSurfaceMesh;
+        file "a3.stl";
+    }
+    a4
+    {
+        type triSurfaceMesh;
+        file "a4.stl";
+    }
+    b1
+    {
+        type triSurfaceMesh;
+        file "b1.stl";
+    }
+    b2
+    {
+        type triSurfaceMesh;
+        file "b2.stl";
+    }
+    b3
+    {
+        type triSurfaceMesh;
+        file "b3.stl";
+    }
+    board
+    {
+        type triSurfaceMesh;
+        file "board.stl";
+    }*/
+};
+
+castellatedMeshControls
+{
+    refinementSurfaces
+    {
+        heatedDuct
+        {
+            level (0 0);
+            regions
+            {
+                fluidInlet     { level (0 0); patchInfo { type patch; } }
+                fluidOutlet    { level (0 0); patchInfo { type patch; } }
+                fluidExternal  { level (0 0); patchInfo { type wall;  } }
+                //boardExternal  { level (0 0); patchInfo { type wall;  } }
+            }
+        }
+
+        a1
+        {
+            level ($min $max);
+            faceZone a1;
+            cellZone a1;
+            mode        insidePoint;
+            insidePoint (-0.02771 -0.00925 0.00385);
+        }
+ /*       a2
+        {
+            level ($min $max);
+            faceZone a2;
+            cellZone a2;
+            mode        insidePoint;
+            insidePoint (-0.01772 0.01301 0.00385);
+        }
+        a3
+        {
+            level ($min $max);
+            faceZone a3;
+            cellZone a3;
+            mode        insidePoint;
+            insidePoint (0.02129 -0.00925 0.00385);
+        }
+        a4
+        {
+            level ($min $max);
+            faceZone a4;
+            cellZone a4;
+            mode        insidePoint;
+            insidePoint (0.03329 -0.00925 0.00385);
+        }  
+        b1
+        {
+            level ($min $max);
+            faceZone b1;
+            cellZone b1;
+            mode        insidePoint;
+            insidePoint (-0.01225 -0.00539 0.001925);
+        }        
+        b2
+        {
+            level ($min $max);
+            faceZone b2;
+            cellZone b2;
+            mode        insidePoint;
+            insidePoint (0.01706 0.01671 0.001925);
+        }  
+        b3
+        {
+            level ($min $max);
+            faceZone b3;
+            cellZone b3;
+            mode        insidePoint;
+            insidePoint (0.01625 0.00931 0.00227);
+        }                        
+        board
+        {
+            level ($min $max);
+            faceZone board;
+            cellZone board;
+            mode        insidePoint;
+            insidePoint (0 0 0.0008);
+        }*/
+    }
+
+    nCellsBetweenLevels 1;
+
+    insidePoint (0.00385 0.01985 0.02);
+}
+
+addLayersControls
+{
+    relativeSizes       true;
+    minThickness        1;
+    finalLayerThickness 1;
+    expansionRatio      1;
+    layers
+    {}
+}
+
+// ************************************************************************* //
